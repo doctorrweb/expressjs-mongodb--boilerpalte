@@ -1,0 +1,23 @@
+{
+  "name": "drweb-expressjs-mongodb--boilerpalte",
+  "version": "1.0.0",
+  "description": "Express JS, MongoDB API Boilerplate",
+  "main": "server.js",
+  "scripts": {
+    "start": "DOTENV_CONFIG_NODE_ENV=production node -r dotenv/config server.js",
+    "dev": "DOTENV_CONFIG_NODE_ENV=development nodemon -r dotenv/config server.js",
+    "test": "DOTENV_CONFIG_NODE_ENV=test"
+  },
+  "author": "doctorrWeb",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.9"
+  },
+  "devDependencies": {
+    "mockgoose": "^8.0.4",
+    "morgan": "^1.10.0"
+  }
+}
