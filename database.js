@@ -23,25 +23,19 @@ const database = {
                 mockgoose.prepareStorage()
                     .then(() => {
                         mongooseConnect()
-                            .then((res, err) => {
-                                if (err) return reject(err)
-                                resolve()
-                            })
+                            .then(() => resolve())
+                            .catch(error => reject(error))
                     })
+                    .catch(error => {reject(error)})
             } else {
                 // Conection to Databse
                 mongooseConnect()
-                    .then((res, err) => {
-                        if (err) return reject(err)
-                        resolve()
-                    })
+                    .then(() => resolve())
+                    .catch(error => reject(error))
             }
-            
         })
     },
-    close: () => {
-        mongoose.disconnect()
-    },
+    close: () => mongoose.disconnect(),
     connection: mongoose.connection
 }
 
