@@ -6,14 +6,29 @@ const { Schema } = mongoose
 const UserSchema = new Schema({
     method: {
         type: String,
-        enum: ['local', /* facebook, google, linkedin, github, activDirecvtory */]
+        enum: ['local', /* facebook, google, linkedin, github, activDirecvtory */],
+        required: true
     },
     local: {
         email: {
-            type: String
+            type: String,
+            unique: true,
+            match: [
+                /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
+                'Please add a valid email'
+            ]
         },
         password: {
-            type: String
+            type: String,
+            required: [true, 'Please add a Password'],
+            minlength: 6,
+            select: false
+        },
+        resePasswordToken: String,
+        resetPasswordExpire: Date,
+        createdAt: {
+            type: Date,
+            default: Date.now
         }
     },
     surname: {
