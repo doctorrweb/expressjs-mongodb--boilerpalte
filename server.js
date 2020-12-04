@@ -1,6 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
+const errorHandler = require('./api/v1/middleware/error')
 // const mongoose = require('mongoose')
 
 require('dotenv').config()
@@ -40,6 +41,10 @@ app.use(bodyParser.urlencoded({ extended: false }, { limit: '50mb' }))
 
 // Middleware for Routes
 app.use('/api', appRouter)
+
+
+// Custom Error Handler
+app.use(errorHandler)
 
 app.listen(env.PORT, () => {
     console.info('*********')
