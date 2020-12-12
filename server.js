@@ -1,6 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
-const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const errorHandler = require('./api/v1/middleware/error')
 // const mongoose = require('mongoose')
 
@@ -36,11 +36,13 @@ end - SETTING OF THE DATABASE
 
 app.use(morgan('tiny'))
 
-app.use(bodyParser.json({ limit: '50mb' }, { type: '*/*' }))
-app.use(bodyParser.urlencoded({ extended: false }, { limit: '50mb' }))
+app.use(express.json({ limit: '50mb' }, { type: '*/*' }))
+app.use(express.urlencoded({ extended: false }, { limit: '50mb' }))
+
+app.use(cookieParser())
 
 // Middleware for Routes
-app.use('/api', appRouter)
+app.use('/api/v1', appRouter)
 
 
 // Custom Error Handler

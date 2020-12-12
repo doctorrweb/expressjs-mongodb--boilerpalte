@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 require('dotenv').config()
+
 const env = process.env
 
 const { Schema } = mongoose
@@ -10,16 +11,28 @@ const { Schema } = mongoose
 const UserSchema = new Schema({
     method: {
         type: String,
-        enum: ['local', /* facebook, google, linkedin, github, activDirecvtory */]
+        enum: ['local', 'facebook' /* facebook, google, linkedin, github, activDirecvtory */],
+        required: [true, 'Please select a connection Method']
     },
-    local: {
-        email: {
-            type: String
+    email: {
+        type: String,
+        required: [true, 'Please add an email address'],
+        match: [
+            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+            'Please add a valid email address'
+        ],
+        unique: true
+    },
+    password: {
+        type: String,
+        required: function () {
+            return this.method === 'local'
         },
-        password: {
-            type: String
-        }
+        minlength: [8, 'Your password must have 8 characters minimum'],
+        select: false,
     },
+    resetPassword: String,
+    resetPasswordExpire: Date,
     surname: {
         type: String
     },
@@ -39,27 +52,36 @@ const UserSchema = new Schema({
     },
     pic: {
         type: String
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 })
 
-const User = mongoose.model('user', UserSchema)
 
-/*
-UserSchema.pre('save', async (next) => {
+// Encrypt Password
+UserSchema.pre('save', async function (next) {
+    console.log('Password', this.password)
     const salt = await bcrypt.genSalt(10)
     this.password = await bcrypt.hash(this.password, salt)
 })
 
+// Compare Password
+UserSchema.methods.matchPassword = async function (password) {
+    return bcrypt.compareSync(password, this.password)
+}
 
+//Sign a web Token
 UserSchema.methods.getSignedJwtToken = () => {
-    jwt.sign({ id: this._id }, 
+    return jwt.sign(
+        { id: this._id }, 
         env.JWT_SECRET,
-        { expiresIn: env.JWT_EXPIRE })
+        { expiresIn: env.JWT_EXPIRE }
+    )
 } 
 
-UserSchema.methods.matchPassword = async (password) => {
-    return await bcrypt.compare(password, this.local.password)
-}
-*/
+const User = mongoose.model('User', UserSchema)
+
 
 module.exports = User
