@@ -3,7 +3,6 @@ const asyncHandler = require('../middleware/async')
 const Event = require('../models/Event')
 
 const geocoder = require('../utils/geocoder')
-const { param } = require('../routes/event')
 
 require('dotenv').config()
 const env = process.env
@@ -104,12 +103,15 @@ exports.getEvents = asyncHandler( async (req, res, next) => {
 
 
 /*
-@desc       Get single events
+@desc       Get single event
 @route      GET /api/v1/events/:id
 @access     Public
 */
 exports.getEvent = asyncHandler( async (req, res, next) => {
-    const event = await Event.findById(req.params.id)
+    const event = await Event.findById(req.params.id).populate({
+        path: 'posts',
+        select: 'title published'
+    })
 
     res.status(200).json({
         success: true,
@@ -177,6 +179,9 @@ exports.getEventsInRadius = asyncHandler( async (req, res, next) => {
 
     const events = await Event.find({
         location: { $geoWithin: { $centerSphere: [ [lng, lat], radius ] } }
+    }).populate({
+        path: 'posts',
+        select: 'title published'
     })
 
     res.status(200).json({
