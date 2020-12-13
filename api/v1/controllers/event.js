@@ -30,9 +30,21 @@ exports.createEvent = asyncHandler( async (req, res, next) => {
 */
 
 exports.getEvents = asyncHandler( async (req, res, next) => {
-    const events = await Event.find({})
+
+    let query
+
+    let queryStr = JSON.stringify(req.query)
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`)
+
+    console.log('queryStr', queryStr)
+
+    query = Event.find(JSON.parse(queryStr))
+
+    const events = await query
+
     res.status(200).json({
         success: true,
+        count: events.length,
         data: events
     })
 })
