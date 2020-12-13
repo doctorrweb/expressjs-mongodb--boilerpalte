@@ -5,7 +5,7 @@ const PostSchema = new Schema({
     title: {
         type: String,
         required: [true, 'Please add a title'],
-        unique,
+        unique: true,
         trim: true,
         maxlength: [50, 'Title cannot be more than 50 characters']
     },
@@ -22,7 +22,7 @@ const PostSchema = new Schema({
             'business',
             'other'
         ],
-        default: 'other'
+        default: ['other']
     },
     published: {
         type: Boolean,
@@ -31,6 +31,11 @@ const PostSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    event: {
+        type: Schema.ObjectId,
+        ref: 'Event',
+        required: true
     }
 })
 

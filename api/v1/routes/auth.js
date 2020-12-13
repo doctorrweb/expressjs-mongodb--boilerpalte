@@ -5,13 +5,13 @@ const { protect, authorize } = require('../middleware/auth')
 
 const authRouter = express.Router()
 
-authRouter.route('/auth/register')
+authRouter.route('/register')
     .post(register)
 
-authRouter.route('/auth/login')
+authRouter.route('/login')
     .post(login)
 
-authRouter.route('/auth/me')
+authRouter.route('/me')
     .get(protect, getMe)
 
 

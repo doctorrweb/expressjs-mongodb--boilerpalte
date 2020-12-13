@@ -1,3 +1,4 @@
+const { Router } = require('express')
 const express = require('express')
 const {
     createEvent, 
@@ -10,19 +11,25 @@ const {
 
 const { protect, authorize } = require('../middleware/auth')
 
+// Include other resource routers
+const postRouter = require('./post')
+
+
 const eventRouter = express.Router()
+// Re-route into other resource routers
+eventRouter.use('/:eventId/posts', postRouter)
 
 
-eventRouter.route('/events/radius/:zipcode/:distance')
+eventRouter.route('/radius/:zipcode/:distance')
     .get(getEventsInRadius)
 
 
-eventRouter.route('/events')
+eventRouter.route('/')
     .post(createEvent)
     .get(getEvents) 
 
 
-eventRouter.route('/events/:id')
+eventRouter.route('/:id')
     .get(getEvent)
     .put(updateEvent)
     .delete(deleteEvent)

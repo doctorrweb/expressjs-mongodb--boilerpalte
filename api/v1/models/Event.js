@@ -63,7 +63,7 @@ const EventSchema = new Schema({
             'business',
             'other'
         ],
-        default: 'other'
+        default: ['other']
     },
     averageRating: {
         type: Number,
@@ -95,6 +95,9 @@ const EventSchema = new Schema({
         type: Date,
         default: Date.now
     }
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 })
 
 // Create Event slug from the name
@@ -121,6 +124,20 @@ EventSchema.pre('save', async function (next) {
     this.address = undefined
 
     next()
+})
+
+// cascade delete posts when an event is deleted
+EventSchema.pre('remove', async function (next) {
+    await this.model('Post').deleteMany({ event: this._id })
+    next()
+})
+
+// Reverse populate with virtuals
+EventSchema.virtual('posts', {
+    ref: 'Post',
+    localField: '_id',
+    foreignField: 'event',
+    justOne: false
 })
 
 module.exports = mongoose.model('Event', EventSchema)

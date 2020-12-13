@@ -15,15 +15,15 @@ userRouter.route('/signup')
 userRouter.route('/signin')  
     .post(localAuthentication, userController.signIn)
     
-userRouter.route('/users')
+userRouter.route('/')
     .get(jwtAuthentication, userController.readAll)
 
-userRouter.route('/users/:id')
+userRouter.route('/:id')
     .get(jwtAuthentication, userController.readOne)
     .put(jwtAuthentication, authorize('administrator'), userController.update)
     .delete(jwtAuthentication, authorize('administrator'), userController.delete)
 
-userRouter.route('/users/updatepassword/:id')
+userRouter.route('/updatepassword/:id')
     .put(jwtAuthentication, authorize('administrator'), userController.updatePassword)    
 
 module.exports = userRouter 

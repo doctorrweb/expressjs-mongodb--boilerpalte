@@ -7,6 +7,7 @@ const env = process.env
 
 // Load Models
 const Event = require('./api/v1/models/Event')
+const Post = require('./api/v1/models/Post')
 
 
 // Connect to DB
@@ -22,11 +23,16 @@ mongoose.connect(
 // Read the JSON Files
 const events = JSON.parse(fs.readFileSync(`${__dirname}/_data/events.json`, 'utf-8'))
 
+// Read the JSON Files
+const posts = JSON.parse(fs.readFileSync(`${__dirname}/_data/posts.json`, 'utf-8'))
+
 // Import into DB
 const importData = async () => {
     try {
         await Event.create(events)
+        await Post.create(posts)
         console.log('Data imported ...'.green.inverse)
+        process.exit()
     } catch (err) {
         console.error(err)
     }
@@ -36,7 +42,9 @@ const importData = async () => {
 const deleteData = async () => {
     try {
         await Event.deleteMany()
+        await Post.deleteMany()
         console.log('Data destroyed ...'.red.inverse)
+        process.exit()
     } catch (err) {
         console.error(err)
     }
