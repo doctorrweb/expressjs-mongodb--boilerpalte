@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 require('dotenv').config()
-
 const env = process.env
 
 const { Schema } = mongoose
@@ -25,9 +24,12 @@ const UserSchema = new Schema({
     },
     password: {
         type: String,
-        required: function () {
-            return this.method === 'local'
-        },
+        required: [
+            function () {
+                return this.method === 'local'
+            },
+            'For local connections, the password is required'
+        ],
         minlength: [8, 'Your password must have 8 characters minimum'],
         select: false,
     },
@@ -38,6 +40,10 @@ const UserSchema = new Schema({
     },
     firstname: {
         type: String
+    },
+    address: {
+        type: String,
+        // required: [true, 'Please add an address']
     },
     role: {
         type: String,
@@ -73,12 +79,8 @@ UserSchema.methods.matchPassword = async function (password) {
 }
 
 //Sign a web Token
-UserSchema.methods.getSignedJwtToken = () => {
-    return jwt.sign(
-        { id: this._id }, 
-        env.JWT_SECRET,
-        { expiresIn: env.JWT_EXPIRE }
-    )
+UserSchema.methods.getSignedJwtToken = function() {
+    return jwt.sign({ id: this._id }, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRE })
 } 
 
 const User = mongoose.model('User', UserSchema)
