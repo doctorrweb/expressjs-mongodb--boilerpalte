@@ -27,24 +27,11 @@ exports.createPost = asyncHandler( async (req, res, next) => {
 @access     Public
 */
 exports.getPosts = asyncHandler(async (req, res, next) => {
-    let query
-
     if (req.params.eventId) {
-        query = Post.find({ event: req.params.eventId })
+        const posts = Post.find({ event: req.params.eventId })
     } else {
-        query = Post.find().populate({
-            path: 'event',
-            select: 'name description'
-        })
+        res.status(200).json(res.advancedFiltering)
     }
-
-    const posts = await query
-
-    res.status(200).json({
-        success: true,
-        count: posts.length,
-        data: posts
-    })
 })
 
 

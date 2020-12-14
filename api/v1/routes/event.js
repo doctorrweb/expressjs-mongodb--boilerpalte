@@ -1,4 +1,3 @@
-const { Router } = require('express')
 const express = require('express')
 const {
     createEvent, 
@@ -9,8 +8,10 @@ const {
     getEventsInRadius,
     fileUploadEvent
 } = require('../controllers/event')
+const Event = require('../models/Event')
 
 const { protect, authorize } = require('../middleware/auth')
+const advancedFiltering = require('../middleware/advancedFiltering')
 
 // Include other resource routers
 const postRouter = require('./post')
@@ -30,7 +31,7 @@ eventRouter.route('/:id/photos')
 
 eventRouter.route('/')
     .post(createEvent)
-    .get(getEvents) 
+    .get(advancedFiltering(Event, { path: 'posts', select: 'title published' }), getEvents) 
 
 
 eventRouter.route('/:id')

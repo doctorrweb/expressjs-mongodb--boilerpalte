@@ -28,78 +28,7 @@ exports.createEvent = asyncHandler( async (req, res, next) => {
 @access     Public
 */
 exports.getEvents = asyncHandler( async (req, res, next) => {
-    let query
-
-    // Copy req.query
-    const reqQuery = { ...req.query }
-
-    // Fields to exclude
-    const removeFields = ['select', 'sort', 'page', 'limit']
-
-    // Loop over removeFields and delete them from reqQuery
-    removeFields.forEach(param => delete reqQuery[param])
-
-    // Create Query String
-    let queryStr = JSON.stringify(reqQuery)
-
-    // Create operators ($gt, $gte, $lt, $lte and $in)
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`)
-
-    // Finding Resource
-    query = Event.find(JSON.parse(queryStr)).populate({
-        path: 'posts',
-        select: 'title published'
-    })
-
-    // Select Fields
-    if (req.query.select) {
-        const fields = req.query.select.split(',').join(' ')
-        console.log('fields', fields)
-        query = query.select(fields)
-    }
-
-    // Sort
-    if (req.query.sort) {
-        const sortBy = req.query.sort.split(',').join(' ')
-        query = query.sort(sortBy)
-    } else {
-        query = query.sort('-createdAt')
-    }
-
-    // Pagination
-    const page = parseInt(req.query.page, 10) || 1
-    const limit = parseInt(req.query.limit, 10) || 50
-    const startIndex = (page - 1) * limit
-    const endIndex = page * limit
-    const totalDoc = await Event.countDocuments()
-
-    query = query.skip(startIndex).limit(limit)
-
-    // Pagination Result
-    const pagination = {}
-
-    if (endIndex < totalDoc) {
-        pagination.next = {
-            page: page + 1,
-            limit
-        }
-    }
-
-    if (startIndex > 0) {
-        pagination.prev = {
-            page: page - 1,
-            limit
-        }
-    }
-
-    // Executing query
-    const events = await query
-    res.status(200).json({
-        success: true,
-        count: events.length,
-        pagination,
-        data: events
-    })
+    res.status(200).json(res.advancedFiltering)
 })
 
 
