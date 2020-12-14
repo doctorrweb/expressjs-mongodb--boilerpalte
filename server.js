@@ -1,7 +1,10 @@
+const path = require('path')
+
 const express = require('express')
 const morgan = require('morgan')
 const colors = require('colors')
 const cookieParser = require('cookie-parser')
+const fileupload = require('express-fileupload')
 const errorHandler = require('./api/v1/middleware/error')
 // const mongoose = require('mongoose')
 
@@ -34,8 +37,14 @@ db.on('error', (err) => {
 end - SETTING OF THE DATABASE
 **** */
 
+if (env.NODE_ENV === 'development') {
+    app.use(morgan('tiny'))
+}
 
-app.use(morgan('tiny'))
+// Handle File Upload
+app.use(fileupload())
+
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(express.json({ limit: '50mb' }, { type: '*/*' }))
 app.use(express.urlencoded({ extended: false }, { limit: '50mb' }))

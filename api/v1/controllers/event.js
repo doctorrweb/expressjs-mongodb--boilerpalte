@@ -1,3 +1,4 @@
+const path = require('path')
 const ErrorResponse = require('../utils/errorResponse')
 const asyncHandler = require('../middleware/async')
 const Event = require('../models/Event')
@@ -189,4 +190,42 @@ exports.getEventsInRadius = asyncHandler( async (req, res, next) => {
         count: events.length,
         data: events
     })
+})
+
+
+/*
+@desc       Upload Photo event
+@route      PUT /api/v1/events/:id/photo
+@access     Private
+*/
+exports.fileUploadEvent = asyncHandler( async (req, res, next) => {
+    
+    const event = await Event.findById(req.params.id)
+    const file = req.files.file
+
+    if(!event) return next(new ErrorResponse(`Resource not found with id of ${req.params.id}`, 404))
+
+    if(!req.files) return next(new ErrorResponse('Please upload a file', 400))
+
+    if(!file.mimetype.startsWith('image')) return next(new ErrorResponse('Please upload an image', 400))
+
+    if(!file.size > env.MAX_UPLOAD_FILE) return next(new ErrorResponse(`Please upload an image less than ${env.MAX_UPLOAD_FILE}`, 400))
+
+    // Create custom file name
+    file.name = `photo_${event._id}${path.parse(file.name).ext}`
+
+    file.mv(`${env.FILE_UPLOAD_PATH}/${file.name}`, async err => {
+        if (err) {
+            console.error(err)
+            return next(new ErrorResponse('Problem with file upload', 500))
+        }
+    })
+
+    await Event.findByIdAndUpdate(req.params.id, { photo: file.name })
+
+    res.status(200).json({
+        success: true,
+        data: { file: file.name }
+    })
+ 
 })

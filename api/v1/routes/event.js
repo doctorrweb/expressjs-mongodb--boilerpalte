@@ -6,7 +6,8 @@ const {
     getEvent, 
     updateEvent, 
     deleteEvent, 
-    getEventsInRadius
+    getEventsInRadius,
+    fileUploadEvent
 } = require('../controllers/event')
 
 const { protect, authorize } = require('../middleware/auth')
@@ -22,6 +23,9 @@ eventRouter.use('/:eventId/posts', postRouter)
 
 eventRouter.route('/radius/:zipcode/:distance')
     .get(getEventsInRadius)
+
+eventRouter.route('/:id/photos')
+    .put(fileUploadEvent)
 
 
 eventRouter.route('/')
