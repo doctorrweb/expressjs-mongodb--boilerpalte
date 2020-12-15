@@ -1,5 +1,11 @@
 const express = require('express')
-const { register, login, getMe } = require('../controllers/auth')
+const {
+    register, 
+    login, 
+    getMe,
+    forgotPassword,
+    resetPassword
+} = require('../controllers/auth')
 
 const { protect, authorize } = require('../middleware/auth')
 
@@ -11,8 +17,16 @@ authRouter.route('/register')
 authRouter.route('/login')
     .post(login)
 
-authRouter.route('/me')
+authRouter.route('/me') 
     .get(protect, getMe)
+
+authRouter.route('/forgotpassword')
+    .post(forgotPassword)
+
+authRouter.route('/resetpassword/:resetToken')
+    .put(resetPassword)
+
+
 
 
 module.exports = authRouter

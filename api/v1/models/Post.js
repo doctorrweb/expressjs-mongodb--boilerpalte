@@ -36,7 +36,12 @@ const PostSchema = new Schema({
         type: Schema.ObjectId,
         ref: 'Event',
         required: true
-    }
+    },
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User',
+        required: true
+    },
 })
 
 

@@ -1,3 +1,5 @@
+const crypto = require('crypto')
+
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -11,7 +13,8 @@ const UserSchema = new Schema({
     method: {
         type: String,
         enum: ['local', 'facebook' /* facebook, google, linkedin, github, activDirecvtory */],
-        required: [true, 'Please select a connection Method']
+        required: [true, 'Please select a connection Method'],
+        default: 'local'
     },
     email: {
         type: String,
@@ -30,7 +33,7 @@ const UserSchema = new Schema({
             },
             'For local connections, the password is required'
         ],
-        minlength: [8, 'Your password must have 8 characters minimum'],
+        minlength: [6, 'Your password must have 8 characters minimum'],
         select: false,
     },
     resetPassword: String,
@@ -68,9 +71,12 @@ const UserSchema = new Schema({
 
 // Encrypt Password
 UserSchema.pre('save', async function (next) {
-    console.log('Password', this.password)
+
+    if(!this.isModified('password')) return next()
+
     const salt = await bcrypt.genSalt(10)
     this.password = await bcrypt.hash(this.password, salt)
+    next()
 })
 
 // Compare Password
@@ -82,6 +88,24 @@ UserSchema.methods.matchPassword = async function (password) {
 UserSchema.methods.getSignedJwtToken = function() {
     return jwt.sign({ id: this._id }, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRE })
 } 
+
+// Generate and Hash Password Token
+UserSchema.methods.getResetPasswordToken = function(req, res, next) {
+
+    // Generate Token
+    const resetToken = crypto.randomBytes(20).toString('hex')
+
+    // Hash Token and set to the esetPassword field
+    this.resetPassword = crypto
+        .createHash('sha256') 
+        .update(resetToken)
+        .digest('hex')
+
+    // Set expire
+    this.resetPasswordExpire = Date.now() + 10 * 60 * 1000
+
+    return resetToken
+}
 
 const User = mongoose.model('User', UserSchema)
 

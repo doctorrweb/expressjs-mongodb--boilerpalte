@@ -9,9 +9,9 @@ const postRouter = require('./post')
 const appRouter = express.Router()
 
 // appRouter.use(/* name of the router  */)
-appRouter.use('/users', userRouter)
 appRouter.use('/auth', authRouter)
 appRouter.use('/events', eventRouter)
 appRouter.use('/posts', postRouter)
+appRouter.use('/users', userRouter)
 
 module.exports = appRouter

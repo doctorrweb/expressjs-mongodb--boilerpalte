@@ -30,14 +30,14 @@ eventRouter.route('/:id/photos')
 
 
 eventRouter.route('/')
-    .post(createEvent)
+    .post(protect, createEvent)
     .get(advancedFiltering(Event, { path: 'posts', select: 'title published' }), getEvents) 
 
 
 eventRouter.route('/:id')
     .get(getEvent)
-    .put(updateEvent)
-    .delete(deleteEvent)
+    .put(protect, updateEvent)
+    .delete(protect, deleteEvent)
 
 
 

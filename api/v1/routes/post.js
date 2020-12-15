@@ -20,12 +20,12 @@ postRouter.route('/')
             path: 'event',
             select: 'name description'
         }), getPosts) 
-    .post(addPost)
+    .post(protect, addPost)
 
 postRouter.route('/:id')
     .get(getPost)
-    .put(updatePost)
-    .delete(deletePost)
+    .put(protect, updatePost)
+    .delete(protect, deletePost)
 
 
 module.exports = postRouter
