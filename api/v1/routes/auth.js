@@ -4,7 +4,9 @@ const {
     login, 
     getMe,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    updateDetails,
+    updatePassword
 } = require('../controllers/auth')
 
 const { protect, authorize } = require('../middleware/auth')
@@ -20,10 +22,16 @@ authRouter.route('/login')
 authRouter.route('/me') 
     .get(protect, getMe)
 
+authRouter.route('/updatedetails') 
+    .put(protect, updateDetails)
+
 authRouter.route('/forgotpassword')
     .post(forgotPassword)
 
-authRouter.route('/resetpassword/:resetToken')
+authRouter.route('/updatepassword')
+    .put(protect, updatePassword)
+
+authRouter.route('/resetpassword/:resettoken')
     .put(resetPassword)
 
 
