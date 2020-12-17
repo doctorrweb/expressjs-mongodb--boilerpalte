@@ -1,0 +1,117 @@
+[
+	{
+		"_id": "5d7a514b5d2c12c7449be017",
+		"method": "local",
+		"surname": "Bognon",
+		"firstname": "Herbain",
+		"email": "doctorrweb@gmail.com",
+		"role": "administrator",
+		"password": "123456"
+	},
+	{
+		"_id": "5d7a514b5d2c12c7449be042",
+		"method": "local",
+		"surname": "Kouame Aristide",
+		"email": "aristide@gmail.com",
+		"role": "suscriber",
+		"password": "123456"
+	},
+	{
+		"_id": "5d7a514b5d2c12c7449be043",
+		"surname": "Beda Yannick",
+		"email": "yannick@gmail.com",
+		"role": "manager",
+		"password": "123456"
+	},
+	{
+		"_id": "5d7a514b5d2c12c7449be044",
+		"surname": "Kouakou Alice",
+		"email": "alice@gmail.com",
+		"role": "suscriber",
+		"password": "123456"
+	},
+	{
+		"_id": "5d7a514b5d2c12c7449be045",
+		"surname": "John Doe",
+		"email": "john@gmail.com",
+		"role": "manager",
+		"password": "123456"
+	},
+	{
+		"_id": "5d7a514b5d2c12c7449be046",
+		"surname": "Kevin Smith",
+		"email": "kevin@gmail.com",
+		"role": "manager",
+		"password": "123456"
+	},
+	{
+		"_id": "5c8a1d5b0190b214360dc031",
+		"surname": "Mary Williams",
+		"email": "mary@gmail.com",
+		"role": "manager",
+		"password": "123456"
+	},
+	{
+		"_id": "5c8a1d5b0190b214360dc032",
+		"surname": "Sasha Ryan",
+		"email": "sasha@gmail.com",
+		"role": "manager",
+		"password": "123456"
+	},
+	{
+		"_id": "5c8a1d5b0190b214360dc033",
+		"surname": "Greg Harris",
+		"email": "greg@gmail.com",
+		"role": "suscriber",
+		"password": "123456"
+	},
+	{
+		"_id": "5c8a1d5b0190b214360dc034",
+		"surname": "Derek Glover",
+		"email": "derek@gmail.com",
+		"role": "suscriber",
+		"password": "123456"
+	},
+	{
+		"_id": "5c8a1d5b0190b214360dc035",
+		"surname": "Stephanie Hanson",
+		"email": "steph@gmail.com",
+		"role": "suscriber",
+		"password": "123456"
+	},
+	{
+		"_id": "5c8a1d5b0190b214360dc036",
+		"surname": "Jerry Wiliams",
+		"email": "jerry@gmail.com",
+		"role": "suscriber",
+		"password": "123456"
+	},
+	{
+		"_id": "5c8a1d5b0190b214360dc037",
+		"surname": "Maggie Johnson",
+		"email": "maggie@gmail.com",
+		"role": "suscriber",
+		"password": "123456"
+	},
+	{
+		"_id": "5c8a1d5b0190b214360dc038",
+		"surname": "Barry Dickens",
+		"email": "barry@gmail.com",
+		"role": "suscriber",
+		"password": "123456"
+	},
+	{
+		"_id": "5c8a1d5b0190b214360dc039",
+		"surname": "Ryan Bolin",
+		"email": "ryan@gmail.com",
+		"role": "suscriber",
+		"password": "123456"
+	},
+	{
+		"_id": "5c8a1d5b0190b214360dc040",
+		"surname": "Sara Kensing",
+		"email": "sara@gmail.com",
+		"role": "suscriber",
+		"password": "123456"
+	}
+]

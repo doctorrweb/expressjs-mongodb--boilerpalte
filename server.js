@@ -1,6 +1,11 @@
+const path = require('path')
+
 const express = require('express')
 const morgan = require('morgan')
-const bodyParser = require('body-parser')
+const colors = require('colors')
+const cookieParser = require('cookie-parser')
+const fileupload = require('express-fileupload')
+const errorHandler = require('./api/v1/middleware/error')
 // const mongoose = require('mongoose')
 
 require('dotenv').config()
@@ -21,7 +26,7 @@ database.connect()
 // Test to connection to database
 const db = database.connection
 db.once('open', () => {
-    console.info('Connected to database !')
+    console.info('Connected to database !'.cyan.underline.bold)
 })
 // Error to connect to databse
 db.on('error', (err) => {
@@ -32,19 +37,40 @@ db.on('error', (err) => {
 end - SETTING OF THE DATABASE
 **** */
 
+if (env.NODE_ENV === 'development') {
+    app.use(morgan('tiny'))
+}
 
-app.use(morgan('tiny'))
+// Handle File Upload
+app.use(fileupload())
 
-app.use(bodyParser.json({ limit: '50mb' }, { type: '*/*' }))
-app.use(bodyParser.urlencoded({ extended: false }, { limit: '50mb' }))
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.use(express.json({ limit: '50mb' }, { type: '*/*' }))
+app.use(express.urlencoded({ extended: false }, { limit: '50mb' }))
+
+app.use(cookieParser())
 
 // Middleware for Routes
-app.use('/api', appRouter)
+app.use('/api/v1', appRouter)
 
-app.listen(env.PORT, () => {
+
+// Custom Error Handler
+app.use(errorHandler)
+
+const server = app.listen(env.PORT, () => {
     console.info('*********')
     console.info('*********')
-    console.info(`The drweb ExpressJS MongoDB Boilerplate server is running on : ${env.BASE_URL}:${env.PORT} !`)
-    console.info('*********')
-    console.info('*********')
+    console.info(`The drweb ExpressJS MongoDB Boilerplate server is running on : ${env.BASE_URL}:${env.PORT} !`.yellow.bold)
+})
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err, promise) => {
+    console.log(`Error: ${err.message}`)
+
+    // Close server & exit process
+    server.close(() => {
+        database.close()
+        process.exit(1)
+    })
 })
