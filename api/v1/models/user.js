@@ -12,32 +12,6 @@ const { Schema } = mongoose
 const UserSchema = new Schema({
     method: {
         type: String,
-<<<<<<< HEAD
-        enum: ['local', /* facebook, google, linkedin, github, activDirecvtory */],
-        required: true
-    },
-    local: {
-        email: {
-            type: String,
-            unique: true,
-            match: [
-                /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
-                'Please add a valid email'
-            ]
-        },
-        password: {
-            type: String,
-            required: [true, 'Please add a Password'],
-            minlength: 6,
-            select: false
-        },
-        resePasswordToken: String,
-        resetPasswordExpire: Date,
-        createdAt: {
-            type: Date,
-            default: Date.now
-        }
-=======
         enum: ['local', 'facebook' /* facebook, google, linkedin, github, activDirecvtory */],
         required: [true, 'Please select a connection Method'],
         default: 'local'
@@ -61,7 +35,6 @@ const UserSchema = new Schema({
         ],
         minlength: [6, 'Your password must have 8 characters minimum'],
         select: false,
->>>>>>> userAuth
     },
     resetPassword: String,
     resetPasswordExpire: Date,
