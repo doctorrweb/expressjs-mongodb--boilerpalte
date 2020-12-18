@@ -6,7 +6,12 @@ const colors = require('colors')
 const cookieParser = require('cookie-parser')
 const fileupload = require('express-fileupload')
 const errorHandler = require('./api/v1/middleware/error')
-// const mongoose = require('mongoose')
+const mongoSanitize = require('express-mongo-sanitize')
+const helmet = require('helmet')
+const xss = require('xss-clean')
+const rateLimit = require("express-rate-limit")
+const hpp = require('hpp')
+// const cors = require('cors')
 
 require('dotenv').config()
 const env = process.env
@@ -44,12 +49,42 @@ if (env.NODE_ENV === 'development') {
 // Handle File Upload
 app.use(fileupload())
 
+
+
+// To replace prohibited characters with _, use:
+// app.use(mongoSanitize({
+//   replaceWith: '_'
+// }))
+
 app.use(express.static(path.join(__dirname, 'public')))
 
+app.use(express.urlencoded({ extended: true }, { limit: '50mb' }))
 app.use(express.json({ limit: '50mb' }, { type: '*/*' }))
-app.use(express.urlencoded({ extended: false }, { limit: '50mb' }))
 
 app.use(cookieParser())
+
+// To remove data, use:
+app.use(mongoSanitize())
+
+// To remove data, use:
+app.use(helmet())
+
+// Prevent XSS attacks
+app.use(xss())
+
+// Enable CORS
+// app.use(cors())
+
+// Rate Limiting
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 100 // limit each IP to 100 requests per wind owMs
+})
+
+app.use(limiter)
+
+// Prevent http param pollution
+app.use(hpp())
 
 // Middleware for Routes
 app.use('/api/v1', appRouter)

@@ -1,4 +1,3 @@
-const crypto = require('crypto')
 const ErrorResponse = require('../utils/errorResponse')
 const asyncHandler = require('../middleware/async')
 const User = require('../models/User')
@@ -12,7 +11,7 @@ const env = process.env
 @access     Private/admin
 */
 exports.getUsers = asyncHandler(async (req, res, next) => {
-    res.status(200).json(res.advancedResults)
+    res.status(200).json(res.advancedFiltering)
 })
 
 

@@ -2,6 +2,7 @@ const express = require('express')
 const {
     register, 
     login, 
+    logout,
     getMe,
     forgotPassword,
     resetPassword,
@@ -18,6 +19,9 @@ authRouter.route('/register')
 
 authRouter.route('/login')
     .post(login)
+
+authRouter.route('/logout')
+    .get(logout)
 
 authRouter.route('/me') 
     .get(protect, getMe)
