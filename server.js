@@ -13,6 +13,8 @@ const rateLimit = require("express-rate-limit")
 const hpp = require('hpp')
 // const cors = require('cors')
 
+require('./api/v1/utils/cache')
+
 require('dotenv').config()
 const env = process.env
 

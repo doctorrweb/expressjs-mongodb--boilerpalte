@@ -2,6 +2,7 @@ const path = require('path')
 const ErrorResponse = require('../utils/errorResponse')
 const asyncHandler = require('../middleware/async')
 const Event = require('../models/Event')
+const { clearHash } = require('../utils/cache')
 
 const geocoder = require('../utils/geocoder')
 
@@ -26,10 +27,12 @@ exports.createEvent = asyncHandler( async (req, res, next) => {
     }
 
     const event = await Event.create(req.body)
-    res.status(200).json({
+    res.status(200).json({ 
         success: true,
         data: event
     })
+
+    clearHash(req.originalUrl)
 })
 
 
@@ -39,6 +42,7 @@ exports.createEvent = asyncHandler( async (req, res, next) => {
 @access     Public
 */
 exports.getEvents = asyncHandler( async (req, res, next) => {
+    // console.log(Object.keys(req))
     res.status(200).json(res.advancedFiltering)
 })
 
@@ -49,10 +53,13 @@ exports.getEvents = asyncHandler( async (req, res, next) => {
 @access     Public
 */
 exports.getEvent = asyncHandler( async (req, res, next) => {
-    const event = await Event.findById(req.params.id).populate({
-        path: 'posts',
-        select: 'title published'
-    })
+    const event = await Event
+        .findById(req.params.id)
+        .populate({
+            path: 'posts',
+            select: 'title published'
+        })
+        .cache({ key: req.originalUrl })
 
     res.status(200).json({
         success: true,
@@ -85,6 +92,8 @@ exports.updateEvent = asyncHandler( async (req, res, next) => {
         success: true,
         data: event
     })
+
+    clearHash(req.originalUrl)
 })
 
 
@@ -110,6 +119,8 @@ exports.deleteEvent = asyncHandler( async (req, res, next) => {
         success: true,
         data: {}
     })
+
+    clearHash(req.originalUrl)
 })
 
 
@@ -132,7 +143,8 @@ exports.getEventsInRadius = asyncHandler( async (req, res, next) => {
     // Earth Radius = 3,963 mi || 6,378 km
     const radius = 3963.2 / distance
 
-    const events = await Event.find({
+    const events = await Event
+    .find({
         location: { $geoWithin: { $centerSphere: [ [lng, lat], radius ] } }
     }).populate({
         path: 'posts',

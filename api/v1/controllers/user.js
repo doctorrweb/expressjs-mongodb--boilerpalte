@@ -2,6 +2,8 @@ const ErrorResponse = require('../utils/errorResponse')
 const asyncHandler = require('../middleware/async')
 const User = require('../models/User')
 
+const { clearHash } = require('../utils/cache')
+
 require('dotenv').config()
 const env = process.env
 
@@ -21,7 +23,9 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
 @access     Private/admin
 */
 exports.getUser = asyncHandler(async (req, res, next) => {
-    const user = await User.findById(req.params.id)
+    const user = await User
+        .findById(req.params.id)
+        .cache({ key: req.originalUrl })
 
     res.status(200).json({
         success: true,
@@ -42,6 +46,8 @@ exports.createUser = asyncHandler(async (req, res, next) => {
         success: true,
         data: user
     })
+
+    clearHash(req.originalUrl)
 })
 
 
@@ -61,6 +67,8 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
         success: true,
         data: user
     })
+
+    clearHash(req.originalUrl)
 })
 
 
@@ -81,5 +89,7 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
         success: true,
         data: {}
     })
+
+    clearHash(req.originalUrl)
 })
 

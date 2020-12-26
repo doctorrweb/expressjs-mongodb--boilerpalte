@@ -3,6 +3,8 @@ const asyncHandler = require('../middleware/async')
 const Post = require('../models/Post')
 const Event = require('../models/Event')
 
+const { clearHash } = require('../utils/cache')
+
 require('dotenv').config()
 const env = process.env
 
@@ -20,6 +22,8 @@ exports.createPost = asyncHandler( async (req, res, next) => {
         success: true,
         data: post
     })
+
+    clearHash(req.originalUrl)
 })
 
 
@@ -30,7 +34,9 @@ exports.createPost = asyncHandler( async (req, res, next) => {
 */
 exports.getPosts = asyncHandler(async (req, res, next) => {
     if (req.params.eventId) {
-        const posts = Post.find({ event: req.params.eventId })
+        const posts = Post
+            .find({ event: req.params.eventId })
+            .cache({ key: req.originalUrl })
     } else {
         res.status(200).json(res.advancedFiltering)
     }
@@ -44,10 +50,13 @@ exports.getPosts = asyncHandler(async (req, res, next) => {
 */
 exports.getPost = asyncHandler( async (req, res, next) => {
 
-    const post = await Post.findById(req.params.id).populate({
-        path: 'event',
-        select: 'name description'
-    })
+    const post = await Post
+        .findById(req.params.id)
+        .populate({
+            path: 'event',
+            select: 'name description'
+        })
+        .cache({ key: req.originalUrl })
 
     if(!post) return next(new ErrorResponse(`Resource not found with id of ${req.params.id}`, 404))
 
@@ -83,6 +92,8 @@ exports.addPost = asyncHandler( async (req, res, next) => {
         success: true,
         data: post
     })
+
+    clearHash('/api/v1/posts')
 })
 
 
@@ -111,6 +122,8 @@ exports.updatePost = asyncHandler( async (req, res, next) => {
         success: true,
         data: post
     })
+
+    clearHash(req.originalUrl)
 })
 
 
@@ -136,4 +149,6 @@ exports.deletePost = asyncHandler( async (req, res, next) => {
         success: true,
         data: {}
     })
+
+    clearHash(req.originalUrl)
 })

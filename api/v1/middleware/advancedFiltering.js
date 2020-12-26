@@ -65,7 +65,9 @@ const advancedFiltering = (model, populate) => async (req, res, next) => {
     }
 
     // Executing query
-    const results = await query
+    const results = await query.cache({
+        key: req.originalUrl
+    })
 
     res.advancedFiltering = {
         success: true,
