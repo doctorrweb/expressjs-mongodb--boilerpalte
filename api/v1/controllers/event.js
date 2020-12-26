@@ -134,7 +134,6 @@ exports.getEventsInRadius = asyncHandler( async (req, res, next) => {
 
     // Get lat/lng from geocoder
     const loc = await geocoder.geocode(zipcode)
-    console.log('loc', loc)
     const lat = loc[0].latitude
     const lng = loc[0].longitude
 

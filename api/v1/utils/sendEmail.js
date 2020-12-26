@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer")
+const ErrorResponse = require("./errorResponse")
 
 require('dotenv').config()
 const env = process.env
@@ -24,9 +25,12 @@ const sendEmail = async (options) => {
     // html: options.html || null
   }
 
-  const info = await transporter.sendMail(message)
+  const email = await transporter.sendMail(message)
 
-  console.log("Message sent: %s", info.messageId)
+  console.log("Message sent: %s", email.messageId)
+  
+  return email
+  
 }
 
 module.exports = sendEmail
