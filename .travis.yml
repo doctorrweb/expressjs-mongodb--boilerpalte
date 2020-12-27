@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+  - "13.10.1"
+dist: trusty
+services:
+  - mongodb
+  - redis-server
+env:
+  - NODE_ENV=development
+cache:
+  directories:
+    - node_modules
+install:
+  - npm install
+script:
+  - mkdir public public/uploads
+  - sleep 2
+  - nohup npm run start &
+  - sleep 3
+  - npm run test

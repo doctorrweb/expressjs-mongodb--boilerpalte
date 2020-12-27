@@ -7,7 +7,7 @@
     "start": "DOTENV_CONFIG_NODE_ENV=production node -r dotenv/config server.js",
     "dev": "DOTENV_CONFIG_NODE_ENV=development nodemon -r dotenv/config server.js",
     "test": "DOTENV_CONFIG_NODE_ENV=test mocha ./test --recursive --exit"
-  },
+  }, 
   "author": "doctorrWeb",
   "license": "MIT",
   "dependencies": {
